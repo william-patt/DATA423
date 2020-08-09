@@ -1,0 +1,59 @@
+---
+title: "William Pattison - Assingment 4"
+output: html_notebook
+---
+```{r}
+suppressPackageStartupMessages(library(qicharts2))
+suppressPackageStartupMessages(library(lubridate))
+monitor <- read.csv("monitor.csv")
+monitor$Date <- lubridate::date(monitor$Timestamp)
+```
+
+
+# Server memory usage
+```{r}
+p <- qicharts2::qic(x = Date, y = ProcessMemory, data = monitor, freeze = 20, chart = "xbar", xlab = "Date", ylab = "Allocated memory (MB)", title = "Average allocated memory (Xbar chart)")
+plot(p)
+summary(p)
+```
+There are red points in the xbar chart (runs.signal = 1, sigma.signal = 10) i.e out-of-control with respect to the xbar chart. 
+```{r}
+p <- qicharts2::qic(x = Date, y = ProcessMemory, data = monitor, freeze = 20, chart = "s", xlab = "Date", ylab = "Allocated memory (MB)", title = "Standard deviation of allocated memory (S chart)")
+plot(p)
+summary(p)
+```
+There are no red points in the s chart (runs.signal = 0, sigma.signal = 0) i.e  in control with respect to the s chart. 
+
+Overall, the memory usage of the server is not in control.
+
+# Prediction time
+```{r}
+p <- qicharts2::qic(x = Date, y = PredictionTimeMS, data = monitor, freeze = 20, chart = "xbar", xlab = "Date", ylab = "Allocated memory (MB)", title = "Average prediction time (Xbar chart)")
+plot(p)
+summary(p)
+```
+There are no red points in the xbar chart (runs.signal = 0, sigma.signal = 0) i.e in-control with respect to the xbar chart. 
+```{r}
+p <- qicharts2::qic(x = Date, y = PredictionTimeMS, data = monitor, freeze = 20, chart = "s", xlab = "Date", ylab = "Allocated memory (MB)", title = "Standard deviation of prediction time (S chart)")
+plot(p)
+summary(p)
+```
+There are red points in the s chart (runs.signal = 1, sigma.signal = 4) i.e  out-of-control with respect to the s chart. 
+
+Overall, the prediction time of the server is not in control.
+
+# Stream of predictions
+```{r}
+p <- qicharts2::qic(x = Date, y = Prediction, data = monitor, freeze = 20, chart = "xbar", xlab = "Date", ylab = "Allocated memory (MB)", title = "Average predicted value (Xbar chart)")
+plot(p)
+summary(p)
+```
+There are no red points in the xbar chart (runs.signal = 0, sigma.signal = 0) i.e in-control with respect to the xbar chart. 
+```{r}
+p <- qicharts2::qic(x = Date, y = Prediction, data = monitor, freeze = 20, chart = "s", xlab = "Date", ylab = "Allocated memory (MB)", title = "Standard deviation of predicted value (S chart)")
+plot(p)
+summary(p)
+```
+There are red points in the s chart (runs.signal = 1, sigma.signal = 0) i.e  out-of-control with respect to the s chart. 
+
+Overall, the value predicted by the model is not in control.
